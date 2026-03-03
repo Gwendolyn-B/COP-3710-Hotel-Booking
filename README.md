@@ -2,7 +2,7 @@
 
 ##Project Scope Statement:
 
-Build a hotel booking database analyzing reservations, services, and pricing. Includes service management, cancellation risk, and transaction-safe booking logic.
+Build a hotel booking database analyzing reservations, services, and pricing. Includes service management, cancellation risk (calculated based on price and time between booking and check-in date), and transaction-safe booking logic.
 
 
 ##Users:
