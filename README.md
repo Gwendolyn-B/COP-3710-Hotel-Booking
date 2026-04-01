@@ -21,3 +21,8 @@ https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand/data
 For conceptual model, draw.io will be used to create flowcharts of entities and entity relations in crow-foot notation.
 
 For physical model, Oracle will be used to create the entity tables with attributes and assigned keys.
+
+
+#Final ER Design Used: (Strong entities being Hotel, Room, Customer, and Payment)
+
+![alt text](image.png)
