@@ -36,3 +36,5 @@ dataload_csv('Hotel_Table.csv', "INSERT INTO Hotel (HOTEL_ID, HOTEL_NAME, ADDRES
 dataload_csv('Room_Table.csv', "INSERT INTO Room (ROOM_ID, HOTEL_ID, ROOM_NUM, ROOM_PRICE, ROOM_STATUS, CANCEL_RISK) VALUES (:1, :2, :3, :4, :5, :6)")
 dataload_csv('Customer_Table.csv', "INSERT INTO Customer (CUS_ID, CUS_FNAME, CUS_LNAME, CUS_EMAIL, CUS_PHONE) VALUES (:1, :2, :3, :4, :5)")
 dataload_csv('Payment_Table.csv', "INSERT INTO Payment (PAY_ID, RES_ID, PAY_DATE, PAY_AMOUNT, PAY_STATUS) VALUES (:1, :2, TO_DATE(:3, 'MM/DD/YYYY'), :4, :5)")
+dataload_csv('Reservation_Table.csv', "INSERT INTO Reservation (RES_ID, CUS_ID, ROOM_ID, RES_DATE, RES_STATUS, TOTAL_COST) VALUES (:1, :2, :3, TO_DATE(:4, 'MM/DD/YYYY'), :5, :6)")
+dataload_csv('Service_Table.csv', "INSERT INTO Service (SERV_PHONE, RES_ID, SERV_TYPE, SERV_PRICE) VALUES (:1, :2, :3, :4)")
