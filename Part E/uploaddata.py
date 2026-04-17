@@ -2,16 +2,15 @@ import oracledb
 import csv
 import os
 
-# --- SETUP ---
+# SETUP
 LIB_DIR = "instantclient_23_0"
 DB_USER = "PLACEHOLDER"
 DB_PASS = "PLACEHOLDER"
 DB_DSN = "PLACEHOLDER"
 
-# Folder where your CSVs are stored
+# Folder of CSVs
 TABLES_FOLDER = "Tables"
 
-# Initialize Thick Mode
 try:
     oracledb.init_oracle_client(lib_dir=LIB_DIR)
 except Exception as e:
@@ -21,7 +20,6 @@ except Exception as e:
 def clear_all_data(cursor):
     """Deletes all data from tables in correct order to avoid constraint errors."""
     print("Step 1: Clearing existing data from tables...")
-    # Order: Delete from Child tables first, then Parent tables
     tables = [
         "services",
         "payments",
@@ -49,7 +47,7 @@ def load_table(cursor, file_name, sql):
     with open(file_path, mode='r', encoding='utf-8-sig') as f:
         reader = csv.reader(f)
         try:
-            next(reader)  # Skip header row
+            next(reader)
         except StopIteration:
             print(f"Skipping: {file_path} is empty.")
             return
@@ -57,7 +55,6 @@ def load_table(cursor, file_name, sql):
         data = []
         for row in reader:
             if any(row):
-                # Clean data: convert empty strings or 'nan' strings to None (NULL)
                 processed_row = [None if val.strip().lower() in ["", "nan"] else val for val in row]
                 data.append(processed_row)
 
@@ -67,7 +64,6 @@ def load_table(cursor, file_name, sql):
                 print(f"Successfully loaded {len(data)} rows from {file_name}")
             except Exception as e:
                 print(f"Error inserting data from {file_name}: {e}")
-                # Print the first row of data to help debug
                 print(f"  Sample data attempted: {data[0]}")
 
 
@@ -78,10 +74,9 @@ def main():
         cursor = conn.cursor()
         print(f"Connected to Oracle. Searching in: {os.path.abspath(TABLES_FOLDER)}")
 
-        # 1. Wipe everything clean first
+        # Clean Everything
         clear_all_data(cursor)
 
-        # 2. Define SQL INSERT statements
         sql_hotels = "INSERT INTO hotels (HOTEL_ID, HOTEL_NAME, ADDRESS, HOTEL_PHONE) VALUES (:1, :2, :3, :4)"
         sql_customers = "INSERT INTO customers (CUS_ID, CUS_FNAME, CUS_LNAME, CUS_EMAIL, CUS_PHONE) VALUES (:1, :2, :3, :4, :5)"
         sql_rooms = "INSERT INTO rooms (ROOM_ID, HOTEL_ID, ROOM_NUM, ROOM_PRICE, ROOM_STATUS, CANCEL_RISK) VALUES (:1, :2, :3, :4, :5, :6)"
@@ -96,7 +91,7 @@ def main():
         """
         sql_services = "INSERT INTO services (SERV_PHONE, RES_ID, SERV_TYPE, SERV_PRICE) VALUES (:1, :2, :3, :4)"
 
-        # 3. Load Tables (Following referential integrity order)
+        # Load Tables
         print("\nStep 2: Loading new data...")
         load_table(cursor, 'Hotel_Table.csv', sql_hotels)
         load_table(cursor, 'Customer_Table.csv', sql_customers)
@@ -105,7 +100,6 @@ def main():
         load_table(cursor, 'Payment_Table.csv', sql_payments)
         load_table(cursor, 'Service_Table.csv', sql_services)
 
-        # 4. Finalize
         conn.commit()
         print("\nAll operations completed successfully!")
 
