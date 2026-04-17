@@ -3,7 +3,7 @@ import oracledb
 import pandas as pd
 import os
 
-# --- DATABASE SETUP ---
+# DATABASE SETUP
 LIB_DIR = "instantclient_23_0"
 DB_USER = "SRAGHUNANDAN8117_SCHEMA_QWBJH"
 DB_PASS = "JFNP11!GGyAHO60A2W34M57W83YBAZ"
@@ -189,7 +189,7 @@ if choice == "Dashboard & Reports":
     except Exception as e:
         st.error(f"Connection Error: {e}")
 
-# --- OTHER ACTIONS ---
+# OTHER ACTIONS (side menu)
 elif choice == "Add Record":
     st.header("Add New Entry")
     st.info("Feature coming soon...")
