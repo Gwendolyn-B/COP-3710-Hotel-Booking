@@ -1,85 +1,54 @@
--- Use this block from SYSTEM user
--- CREATE USER system IDENTIFIED BY "Stryker_11";
--- GRANT ALL PRIVILEGES TO system;
+DROP TABLE services CASCADE CONSTRAINTS;
+DROP TABLE payments CASCADE CONSTRAINTS;
+DROP TABLE reservations CASCADE CONSTRAINTS;
+DROP TABLE rooms CASCADE CONSTRAINTS;
+DROP TABLE customers CASCADE CONSTRAINTS;
+DROP TABLE hotels CASCADE CONSTRAINTS;
 
--- Use this block from SYSTEM user
-CREATE SEQUENCE Hotel_Booking;
-CREATE TABLE Hotel(
-    HOTEL_ID NUMBER NOT NULL,
-    HOTEL_NAME VARCHAR(20),
-    ADDRESS VARCHAR(20),
-    HOTEL_PHONE NUMBER,
-
-    CONSTRAINT PK_HOTEL PRIMARY KEY (HOTEL_ID)
+CREATE TABLE hotels (
+    hotel_id    NUMBER PRIMARY KEY,
+    hotel_name  VARCHAR2(100),
+    address     VARCHAR2(255),
+    hotel_phone VARCHAR2(20)
 );
 
-CREATE TABLE Room(
-    ROOM_ID NUMBER NOT NULL,
-    HOTEL_ID NUMBER NOT NULL,
-    ROOM_NUM NUMBER NOT NULL,
-    ROOM_PRICE FLOAT,
-    ROOM_STATUS VARCHAR(10),
-    CANCEL_RISK FLOAT,
-
-    CONSTRAINT PK_ROOM PRIMARY KEY (ROOM_ID)
+CREATE TABLE customers (
+    cus_id      NUMBER PRIMARY KEY,
+    cus_fname   VARCHAR2(50),
+    cus_lname   VARCHAR2(50),
+    cus_email   VARCHAR2(100),
+    cus_phone   VARCHAR2(20)
 );
 
-CREATE TABLE Customer(
-    CUS_ID NUMBER NOT NULL,
-    CUS_FNAME VARCHAR(20),
-    CUS_LNAME VARCHAR(20),
-    CUS_EMAIL VARCHAR(20) NOT NULL,
-    CUS_PHONE NUMBER,
-
-    CONSTRAINT PK_CUS PRIMARY KEY (CUS_ID)
+CREATE TABLE rooms (
+    room_id     NUMBER PRIMARY KEY,
+    hotel_id    NUMBER REFERENCES hotels(hotel_id),
+    room_num    NUMBER,
+    room_price  NUMBER(10, 2),
+    room_status VARCHAR2(20),
+    cancel_risk NUMBER(4, 2)
 );
 
-CREATE TABLE Payment(
-    PAY_ID NUMBER NOT NULL,
-    RES_ID NUMBER NOT NULL,
-    PAY_DATE DATE,
-    PAY_AMOUNT FLOAT,
-    PAY_STATUS VARCHAR(10),
-
-    CONSTRAINT PK_PAYMENT PRIMARY KEY (PAY_ID)
+CREATE TABLE reservations (
+    res_id      NUMBER PRIMARY KEY,
+    cus_id      NUMBER REFERENCES customers(cus_id),
+    room_id     NUMBER REFERENCES rooms(room_id),
+    res_date    DATE,
+    res_status  VARCHAR2(50),
+    total_cost  NUMBER(10, 2)
 );
 
-CREATE TABLE Reservation(
-    RES_ID NUMBER,
-    CUS_ID NUMBER,
-    ROOM_ID NUMBER,
-    RES_DATE DATE,
-    RES_STATUS VARCHAR(20),
-    TOTAL_COST FLOAT,
-
-    CONSTRAINT PK_RES PRIMARY KEY (RES_ID)
+CREATE TABLE payments (
+    pay_id      NUMBER PRIMARY KEY,
+    res_id      NUMBER REFERENCES reservations(res_id),
+    pay_date    DATE,
+    pay_amount  NUMBER(10, 2),
+    pay_status  VARCHAR2(20)
 );
 
-CREATE TABLE Service(
-    SERV_PHONE NUMBER,
-    RES_ID NUMBER,
-    SERV_TYPE VARCHAR(20),
-    SERV_PRICE FLOAT,
-
-    CONSTRAINT PK_SERVICE PRIMARY KEY (SERV_PHONE, RES_ID)
+CREATE TABLE services (
+    serv_phone  VARCHAR2(20),
+    res_id      NUMBER REFERENCES reservations(res_id),
+    serv_type   VARCHAR2(50),
+    serv_price  NUMBER(10, 2)
 );
-
-ALTER TABLE Room
-ADD CONSTRAINT FK_Room
-FOREIGN KEY (HOTEL_ID)
-REFERENCES Hotel(HOTEL_ID);
-
-ALTER TABLE Reservation
-ADD CONSTRAINT FK_Res
-FOREIGN KEY (CUS_ID, ROOM_ID)
-REFERENCES Customer(CUS_ID), Room(ROOM_ID);
-
-ALTER TABLE Service
-ADD CONSTRAINT FK_Service
-FOREIGN KEY (RES_ID)
-REFERENCES Reservation(RES_ID);
-
-ALTER TABLE Payment
-ADD CONSTRAINT FK_Payment
-FOREIGN KEY (RES_ID)
-REFERENCES Reservation(RES_ID);
