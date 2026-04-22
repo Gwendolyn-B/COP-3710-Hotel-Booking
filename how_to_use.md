@@ -18,4 +18,6 @@ Before running the application, you need to set up the schema and import the dat
 
 1.  **Create Schema:** Run the `create_db.sql` script in your SQL tool or via the app to generate the necessary tables.
 2.  **Upload Data:** Run the `uploaddata.py` (or the corresponding function in `app.py`) to process the CSV files and populate your database.
-3. **Run App:** Run the `app.py` by using the command python -m streamlit run app.py in the terminal.
+
+## 4. Running the Application
+Run the `app.py` by using the command `python -m streamlit run app.py` in the terminal.
